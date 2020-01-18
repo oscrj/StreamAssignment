@@ -30,10 +30,8 @@ public class StreamAssignment {
     @Test
     public void task1(){
         List<Integer> integers = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
-
         integers.stream()
                 .forEach(System.out::println);
-
     }
 
     /**
@@ -42,9 +40,8 @@ public class StreamAssignment {
     @Test
     public void task2(){
         long amount = 0;
-
-        //Write code here
-
+        amount = people.stream()
+                .count();
 
         assertEquals(10000, amount);
     }
@@ -56,8 +53,9 @@ public class StreamAssignment {
     public void task3(){
         long amount = 0;
         int expected = 90;
-
-        //Write code here
+        amount = people.stream()
+                .filter(person -> person.getLastName().equalsIgnoreCase("Andersson"))
+                .count();
 
         assertEquals(expected, amount);
     }
