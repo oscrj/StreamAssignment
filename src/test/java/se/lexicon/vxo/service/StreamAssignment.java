@@ -5,12 +5,15 @@ import se.lexicon.vxo.model.Gender;
 import se.lexicon.vxo.model.Person;
 import se.lexicon.vxo.model.PersonDto;
 
+import java.nio.file.attribute.AttributeView;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -140,8 +143,8 @@ public class StreamAssignment {
         Optional<Person> optional = null;
 
         optional = people.stream()
-                .min(Comparator.comparing(Person::getDateOfBirth));     //  (p1, p2) -> p1.getDateOfBirth().compareTo(p2.getDateOfBirth())
-                                                                        //.min((p1, p2) -> Period.between(p2.getDateOfBirth(), LocalDate.now()).getYears() - Period.between(p1.getDateOfBirth(), LocalDate.now()).getYears());
+                .min(Comparator.comparing(Person::getDateOfBirth));      //  (p1, p2) -> p1.getDateOfBirth().compareTo(p2.getDateOfBirth())
+                                                                         //.min((p1, p2) -> Period.between(p2.getDateOfBirth(), LocalDate.now()).getYears() - Period.between(p1.getDateOfBirth(), LocalDate.now()).getYears());
 
         assertNotNull(optional);
         assertEquals(expectedBirthDate, optional.get().getDateOfBirth());
@@ -157,12 +160,7 @@ public class StreamAssignment {
 
         List<PersonDto> dtoList = null;
 
-        /*
-        dtoList = people.stream()
-                .map(person -> person.getDateOfBirth().isBefore(date))
-                .collect(Collectors.toList(TreeSet::new));
-
-         */
+        // Code Here.......
 
 
         assertNotNull(dtoList);
@@ -180,9 +178,13 @@ public class StreamAssignment {
 
         Optional<String> optional = null;
 
-        //optional = people.stream()
-        //        .filter(person -> person.getPersonId() == 5914)
-
+        optional = people.stream()
+                .filter(person -> person.getPersonId() == 5914)
+                .map(person -> {
+                    StringBuilder sb = new StringBuilder(person.getDateOfBirth().format(DateTimeFormatter.ofPattern("eeee dd MMMM YYYY")));
+                    return sb.toString().toUpperCase();
+                })
+                .findFirst();
 
         assertNotNull(optional);
         assertTrue(optional.isPresent());
@@ -200,7 +202,8 @@ public class StreamAssignment {
         double expected = 54.42;
         double averageAge = 0;
 
-        //
+        // Code Here....
+
 
         assertTrue(averageAge > 0);
         assertEquals(expected, averageAge, .01);
@@ -239,9 +242,9 @@ public class StreamAssignment {
         personMap = people.stream()
                 .collect(Collectors.groupingBy(person -> person.getLastName()));
 
-        personMap.forEach((String key, List<Person> value) -> {
-            System.out.println("\nEvery person with lastName: " + key);
-            value.forEach(System.out::println);
+        personMap.forEach((String lastName, List<Person> ListOfLastNames) -> {
+            System.out.println("\nEvery person with lastName: " + lastName);
+            ListOfLastNames.forEach(System.out::println);
         });
 
         assertNotNull(personMap);
