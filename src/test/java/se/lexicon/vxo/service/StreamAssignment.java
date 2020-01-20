@@ -203,8 +203,8 @@ public class StreamAssignment {
         double expected = 54.42;
         double averageAge = 0;
 
-        // Code Here....
-
+        averageAge = people.stream()
+                .collect(Collectors.averagingInt(personToAge));
 
         assertTrue(averageAge > 0);
         assertEquals(expected, averageAge, .01);
