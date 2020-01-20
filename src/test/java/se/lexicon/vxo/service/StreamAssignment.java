@@ -160,9 +160,10 @@ public class StreamAssignment {
 
         List<PersonDto> dtoList = null;
 
-        // Code Here.......
-
-
+        dtoList = people.stream()
+                .filter(person -> person.getDateOfBirth().isBefore(date))
+                .map(person -> new PersonDto(person.getPersonId(), person.getFirstName() + " " + person.getLastName()))
+                .collect(Collectors.toList());
         assertNotNull(dtoList);
         assertEquals(expectedSize, dtoList.size());
     }
@@ -179,7 +180,7 @@ public class StreamAssignment {
         Optional<String> optional = null;
 
         optional = people.stream()
-                .filter(person -> person.getPersonId() == 5914)
+                .filter(person -> person.getPersonId() == personId)
                 .map(person -> {
                     StringBuilder sb = new StringBuilder(person.getDateOfBirth().format(DateTimeFormatter.ofPattern("eeee dd MMMM YYYY")));
                     return sb.toString().toUpperCase();
@@ -219,12 +220,13 @@ public class StreamAssignment {
         String[] result = null;
 
         result = people.stream()
-                .distinct()
                 .filter(person -> {
                    StringBuilder sb = new StringBuilder(person.getFirstName());
                    return sb.reverse().toString().equalsIgnoreCase(person.getFirstName());
                })
-                .peek(System.out::println)
+                .map(person -> person.getFirstName().toString())
+                .distinct()
+                .sorted()
                 .toArray(String[]::new);
 
         assertNotNull(result);
@@ -240,7 +242,7 @@ public class StreamAssignment {
         Map<String, List<Person>> personMap = null;
 
         personMap = people.stream()
-                .collect(Collectors.groupingBy(person -> person.getLastName()));
+                .collect(Collectors.groupingBy(person -> person.getLastName()));    //  Person::getLastName
 
         personMap.forEach((String lastName, List<Person> ListOfLastNames) -> {
             System.out.println("\nEvery person with lastName: " + lastName);
