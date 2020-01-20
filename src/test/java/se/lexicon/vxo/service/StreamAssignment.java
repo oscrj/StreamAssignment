@@ -90,7 +90,7 @@ public class StreamAssignment {
         Set<LocalDate> dates = null;
 
         dates = people.stream()
-                .map(person -> person.getDateOfBirth())     //  (Person::getDateOfBirth)
+                .map(Person::getDateOfBirth)     //  person -> person.getDateOfBirth()
                 .collect(Collectors.toSet());
 
         assertNotNull(dates);
@@ -108,7 +108,7 @@ public class StreamAssignment {
 
         result = people.stream()
                 .filter(person -> person.getFirstName().equalsIgnoreCase("Erik"))
-                .toArray(Person[]::new);
+                .toArray(Person[]::new);    // (i -> new Person[i])
 
         assertNotNull(result);
         assertEquals(expectedLength, result.length);
@@ -127,7 +127,6 @@ public class StreamAssignment {
               .filter(person -> person.getPersonId() == 5436)
               .findFirst();
 
-
         assertNotNull(optional);
         assertTrue(optional.isPresent());
         assertEquals(expected, optional.get());
@@ -144,7 +143,6 @@ public class StreamAssignment {
 
         optional = people.stream()
                 .min(Comparator.comparing(Person::getDateOfBirth));      //  (p1, p2) -> p1.getDateOfBirth().compareTo(p2.getDateOfBirth())
-                                                                         //.min((p1, p2) -> Period.between(p2.getDateOfBirth(), LocalDate.now()).getYears() - Period.between(p1.getDateOfBirth(), LocalDate.now()).getYears());
 
         assertNotNull(optional);
         assertEquals(expectedBirthDate, optional.get().getDateOfBirth());
@@ -242,11 +240,11 @@ public class StreamAssignment {
         Map<String, List<Person>> personMap = null;
 
         personMap = people.stream()
-                .collect(Collectors.groupingBy(person -> person.getLastName()));    //  Person::getLastName
+                .collect(Collectors.groupingBy(Person::getLastName));    //  person -> person.getLastName()
 
         personMap.forEach((String lastName, List<Person> ListOfLastNames) -> {
-            System.out.println("\nEvery person with lastName: " + lastName);
-            ListOfLastNames.forEach(System.out::println);
+            //  System.out.println("\nEvery person with lastName: " + lastName);    //  Remove comment to print THAT lastName.
+            //  ListOfLastNames.forEach(System.out::println);       // Remove comment to print a list containing All people with THAT lastName.
         });
 
         assertNotNull(personMap);
@@ -260,10 +258,10 @@ public class StreamAssignment {
     public void task14(){
         LocalDate[] _2020_dates = null;
 
-       _2020_dates = Stream.iterate(LocalDate.ofYearDay(2020,1), localDate -> localDate.isBefore(LocalDate.of(2020 +1, 1, 1)), localDate -> localDate.plusDays(1))
-               .peek(System.out::println)
+        LocalDate startYear = LocalDate.ofYearDay(2020,1);
+       _2020_dates = Stream.iterate(startYear, localDate -> localDate.isBefore(LocalDate.of(2020 +1, 1, 1)), localDate -> localDate.plusDays(1))
+               //   .peek(System.out::println)  //  If you like too peek.
                .toArray(LocalDate[]::new);
-
 
         assertNotNull(_2020_dates);
         assertEquals(366, _2020_dates.length);
